@@ -1,8 +1,12 @@
 package com.amigoscode.person;
+<<<<<<< HEAD
 
 import com.amigoscode.SortingOrder;
 import com.amigoscode.exception.DuplicateResourceException;
 import com.amigoscode.exception.ResourceNotFoundException;
+=======
+import com.amigoscode.SortingOrder;
+>>>>>>> a6aa5a8 (Initialize exceptions-start)
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +26,11 @@ public class PersonService {
     }
 
     public List<Person> getPeople(
+<<<<<<< HEAD
             SortingOrder sort
+=======
+           SortingOrder sort
+>>>>>>> a6aa5a8 (Initialize exceptions-start)
     ) {
         if (sort == SortingOrder.ASC) {
             return personRepository.getPeople().stream()
@@ -35,6 +43,7 @@ public class PersonService {
     }
 
 
+<<<<<<< HEAD
     public Person getPersonById(Integer id) {
         return personRepository.getPeople().stream()
                 .filter(p -> p.id().equals(id))
@@ -42,10 +51,17 @@ public class PersonService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Person with id: " + id + " does not exists"));
+=======
+    public Optional<Person> getPersonById(Integer id) {
+        return personRepository.getPeople().stream()
+                .filter(p -> p.id().equals(id))
+                .findFirst();
+>>>>>>> a6aa5a8 (Initialize exceptions-start)
 
     }
 
     public void deletePersonById(Integer id) {
+<<<<<<< HEAD
         Person person = personRepository.getPeople().stream()
                 .filter(p -> p.id().equals(id))
                 .findFirst()
@@ -64,6 +80,13 @@ public class PersonService {
             }
         }
 
+=======
+        personRepository.getPeople()
+                .removeIf(person -> person.id().equals(id));
+    }
+
+    public void addPerson(NewPersonRequest person) {
+>>>>>>> a6aa5a8 (Initialize exceptions-start)
         personRepository.getPeople().add(
                 new Person(
                         personRepository.getIdCounter().incrementAndGet(),
@@ -77,6 +100,7 @@ public class PersonService {
 
     public void updatePerson(Integer id,
                              PersonUpdateRequest request) {
+<<<<<<< HEAD
         Person p = personRepository.getPeople().stream()
                 .filter(person -> person.id().equals(id))
                 .findFirst()
@@ -129,3 +153,53 @@ public class PersonService {
     }
 
 }
+=======
+        personRepository.getPeople().stream()
+                .filter(p -> p.id().equals(id))
+                .findFirst()
+                .ifPresent(p -> {
+                    var index = personRepository.getPeople().indexOf(p);
+
+                    if (request.name() != null &&
+                            !request.name().isEmpty() &&
+                            !request.name().equals(p.name())) {
+                        Person person = new Person(
+                                p.id(),
+                                request.name(),
+                                p.age(),
+                                p.gender(),
+                                p.email()
+
+                        );
+                        personRepository.getPeople().set(index, person);
+                    }
+                    if (request.email() != null &&
+                            !request.email().isEmpty() &&
+                            !request.email().equals(p.email())) {
+                        Person person = new Person(
+                                p.id(),
+                                p.name(),
+                                p.age(),
+                                p.gender(),
+                                request.email()
+
+                        );
+                        personRepository.getPeople().set(index, person);
+                    }
+                    if (request.age() != null
+                            && !request.age().equals(p.age())) {
+                        Person person = new Person(
+                                p.id(),
+                                p.name(),
+                                request.age(),
+                                p.gender(),
+                                p.email()
+
+                        );
+                        personRepository.getPeople().set(index, person);
+                    }
+                });
+    }
+
+}
+>>>>>>> a6aa5a8 (Initialize exceptions-start)

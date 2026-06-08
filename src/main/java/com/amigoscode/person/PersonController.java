@@ -39,10 +39,17 @@ public class PersonController {
 
 
     @GetMapping("{id}")
+<<<<<<< HEAD
     public ResponseEntity<Person> getPersonById(
             @Valid @Positive @PathVariable("id") Integer id
     ) {
         Person person = personService.getPersonById(id);
+=======
+    public ResponseEntity<Optional<Person>> getPersonById(
+            @Valid @Positive @PathVariable("id") Integer id
+    ) {
+        Optional<Person> person = personService.getPersonById(id);
+>>>>>>> a6aa5a8 (Initialize exceptions-start)
         return ResponseEntity.ok().body(person);
     }
 
