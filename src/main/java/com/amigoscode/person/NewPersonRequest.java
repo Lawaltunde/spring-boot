@@ -1,11 +1,12 @@
 package com.amigoscode.person;
 
-import jakarta.validation.Valid;
+import com.amigoscode.validation.Foo;
 import jakarta.validation.constraints.*;
 
-public record PersonUpdateRequest(
+public record NewPersonRequest(
         @NotNull @NotEmpty String name,
-        @Min(16) Integer age,
+        @Positive @Min(16) Integer age,
+        @NotNull Gender gender,
         @Email String email
 ) {
 }

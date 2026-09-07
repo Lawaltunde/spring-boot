@@ -1,6 +1,8 @@
 package com.amigoscode.person;
 
 import com.amigoscode.SortingOrder;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,25 +33,25 @@ public class PersonController {
 
     @GetMapping("{id}")
     public ResponseEntity<Optional<Person>> getPersonById(
-            @PathVariable("id") Integer id
+            @PathVariable @Positive Integer id
     ) {
         Optional<Person> person = personService.getPersonById(id);
         return ResponseEntity.ok().body(person);
     }
 
     @DeleteMapping("{id}")
-    public void deletePersonById(@PathVariable("id") Integer id) {
+    public void deletePersonById(@PathVariable @Positive Integer id) {
         personService.deletePersonById(id);
     }
 
     @PostMapping
-    public void addPerson(@RequestBody Person person) {
+    public void addPerson(@RequestBody @Valid NewPersonRequest person) {
         personService.addPerson(person);
     }
 
     @PutMapping("{id}")
-    public void updatePerson(@PathVariable("id") Integer id,
-                             @RequestBody PersonUpdateRequest request) {
+    public void updatePerson(@PathVariable @Positive Integer id,
+                             @Valid @RequestBody PersonUpdateRequest request) {
         personService.updatePerson(id, request);
     }
 

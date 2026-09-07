@@ -1,5 +1,6 @@
 package com.amigoscode.person;
 import com.amigoscode.SortingOrder;
+import jakarta.validation.constraints.Positive;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +45,14 @@ public class PersonService {
                 .removeIf(person -> person.id().equals(id));
     }
 
-    public void addPerson(Person person) {
+    public void addPerson(NewPersonRequest person) {
         personRepository.getPeople().add(
                 new Person(
                         personRepository.getIdCounter().incrementAndGet(),
                         person.name(),
                         person.age(),
-                        person.gender()
+                        person.gender(),
+                        person.email()
                 )
         );
     }
@@ -70,7 +72,8 @@ public class PersonService {
                                 p.id(),
                                 request.name(),
                                 p.age(),
-                                p.gender()
+                                p.gender(),
+                                p.email()
 
                         );
                         personRepository.getPeople().set(index, person);
@@ -81,9 +84,19 @@ public class PersonService {
                                 p.id(),
                                 p.name(),
                                 request.age(),
-                                p.gender()
+                                p.gender(),
+                                p.email()
 
                         );
+                        personRepository.getPeople().set(index, person);
+                    }
+                    if (request.email() != null && !request.email().isEmpty() && !request.email().equals(p.email())) {
+                        Person person = new Person(
+                                p.id(),
+                                p.name(),
+                                p.age(),
+                                p.gender(),
+                                request.email());
                         personRepository.getPeople().set(index, person);
                     }
                 });
