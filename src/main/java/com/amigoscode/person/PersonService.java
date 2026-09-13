@@ -2,14 +2,12 @@ package com.amigoscode.person;
 
 import com.amigoscode.SortingOrder;
 import com.amigoscode.person.exception.BadRequestException;
+import com.amigoscode.person.exception.DuplicateResourceException;
 import com.amigoscode.person.exception.ResourceNotFoundExecption;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,13 +56,20 @@ public class PersonService {
     }
 
     public void addPerson(NewPersonRequest person) {
-        personRepository.getPeople().stream().
-                filter(p -> p.email().equals(person.email())).
-                findFirst().ifPresent(p -> {
-                    throw new DuplicateResourceException(
-                            "Email " + person.email() + " is taken"
-                    );
-                });
+        if (person.email() == null || person.email().isEmpty()) {
+            throw new BadRequestException(
+                    "Email cannot be null or empty"
+            );
+        }
+
+        boolean exists = personRepository.getPeople().stream().
+                anyMatch(p -> p.email().equalsIgnoreCase(person.email()));
+
+        if (exists) {
+            throw new DuplicateResourceException(
+                    "Email " + person.email() + " is taken"
+            );
+        }
         personRepository.getPeople().add(
                 new Person(
                         personRepository.getIdCounter().incrementAndGet(),
