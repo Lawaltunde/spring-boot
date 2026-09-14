@@ -1,6 +1,4 @@
-package com.amigoscode.person;
-
-import jakarta.validation.constraints.Email;
+package com.amigoscode.person.exception;
 
 public class DuplicateResourceException extends RuntimeException {
     public DuplicateResourceException(String message) {

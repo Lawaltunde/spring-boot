@@ -1,9 +1,9 @@
 package com.amigoscode.person.exception;
 
-import com.amigoscode.person.DuplicateResourceException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -52,12 +52,13 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handler(MethodArgumentNotValidException e, HttpServletRequest request) {
+        List<String> errors = e.getAllErrors().stream().map(error -> error.getDefaultMessage()).toList();
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST.value(),
                 ZonedDateTime.now(),
-                List.of()
+                errors
         );
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
